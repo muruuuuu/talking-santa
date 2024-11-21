@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talking Santa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        #santa {
+            width: 200px;
+            height: 200px;
+            background: url('https://media.istockphoto.com/id/1406932980/photo/santa-claus-in-eyeglasses-is-looking-at-camera-and-smiling-on-gray-background.jpg?s=612x612&w=is&k=20&c=E4HlV61WeQSZSndxwts9ZEMr6RS7eLvDPVXr0lhAFek=') no-repeat center center;
+            background-size: contain;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+        button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Talking Santa</h1>
+    <div id="santa"></div>
+    <button id="talkButton">Talk to Santa!</button>
+    <p id="responseText">Click the button and talk to Santa!</p>
+
+    <script>
+        // Check if the browser supports Speech Recognition and Text-to-Speech
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        const synth = window.speechSynthesis;
+
+        const talkButton = document.getElementById('talkButton');
+        const responseText = document.getElementById('responseText');
+        const santaImage = document.getElementById('santa');
+
+        talkButton.addEventListener('click', () => {
+            recognition.start(); // Start speech recognition
+            responseText.textContent = 'Listening...';
+        });
+
+        // Handle speech recognition results
+        recognition.onresult = (event) => {
+            const userSpeech = event.results[0][0].transcript;
+            responseText.textContent = `You said: ${userSpeech}`;
+            talkSanta(userSpeech);
+        };
+
+        // Function for Santa to speak back
+        function talkSanta(message) {
+            const utterance = new SpeechSynthesisUtterance(`Ho Ho Ho! You said: ${message}`);
+            synth.speak(utterance);
+        }
+
+        // Add a simple animation effect when you click on Santa
+        santaImage.addEventListener('click', () => {
+            santaImage.style.transform = 'rotate(360deg)';
+            setTimeout(() => {
+                santaImage.style.transform = 'rotate(0deg)';
+            }, 1000);
+        });
+    </script>
+
+</body>
+</html>
